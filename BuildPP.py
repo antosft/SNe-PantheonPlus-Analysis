@@ -12,7 +12,7 @@ def PPcov(fulldf):
     covlow = np.block([[np.zeros((3, s*3)), # zero blocks in same row before cov block
                         np.dot(np.dot(np.diagflat([-2.5 / np.log(10) / fulldf.iloc[s].loc['x0'], 1, 1]), # Jacobian dotproduct with ...
                                       np.array([[0]*3, [fulldf.iloc[s].loc['COV_x1_x0']] + [0]*2, [fulldf.iloc[s].loc['COV_c_x0'], fulldf.iloc[s].loc['COV_x1_c'], 0]])), # ... cov matrix from PP for (x0, x1, c) ...
-                               np.transpose(np.diagflat([-2.5 / np.log(10) / fulldf.iloc[s].loc['x0'], 1, 1]))), # ... doproduct with transposed Jacobian
+                               np.transpose(np.diagflat([-2.5 / np.log(10) / fulldf.iloc[s].loc['x0'], 1, 1]))), # ... dotproduct with transposed Jacobian
                         np.zeros((3, (len(fulldf.index) - s-1)*3))] for s in range(len(fulldf.index))]) # zero blocks in same row after cov block
     covdf = pd.DataFrame(covlow + covdiag + np.transpose(covlow)) # cov matrix for all SNe events
     
@@ -21,26 +21,36 @@ def PPcov(fulldf):
     covdf.index = idxcov
     covdf = covdf.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() # combine duplicated SNe
     
-    return np.array(covdf)
+    return covdf
 
 # -------------------- select columns as in BuildJLACases ----------------------------
 def PPinput(fulldf):
     myinput = fulldf.loc[:, ['zCMB', 'mB', 'x1', 'c', 'HOST_LOGMASS', 'IDSURVEY', 'zHEL', 'RA', 'DEC']]
     myinput.loc[:, 'IDSURVEY'] = fulldf.index.value_counts()
     myinput = myinput.groupby(level=0).mean() # combine duplicated SNe
-    return np.array(myinput.sort_index())
+    return myinput.sort_index()
 
 ###################### RUN ###########################################################
-# -------------------- choose file to load from input arguments ----------------------
-fitopt = int(sys.argv[1])
-muopt = int(sys.argv[2])
-namefitopt = str(1000 + fitopt)[1:]
-namemuopt = str(1000 + muopt)[1:]
+# -------------------- read scaling of files -----------------------------------------
+summary = pd.read_csv('Pantheon/fitopts_summary.csv', index_col=0)
+summary.loc[:, 'weights'] = summary.loc[:, 'scale'] * summary.loc[:, 'vpecTo0']
 
-# -------------------- read file -----------------------------------------------------
-mydf = pd.read_table('Pantheon/calibration_files/FITOPT' + namefitopt + '_MUOPT' + namemuopt + '.FITRES', sep=' ', comment='#', skipinitialspace=True, index_col=[0, 1]).dropna(how='all', axis=0).dropna(how='all', axis=1).droplevel('VARNAMES:', axis=0)
-# mydf = mydf.sort_values(by='zCMB')
+# -------------------- read files ----------------------------------------------------
+print('read files')
+dfs = {fo: pd.read_table('Pantheon/calibration_files/' + fo + '_MUOPT000.FITRES', sep=' ', comment='#', skipinitialspace=True, index_col=[0, 1]).dropna(how='all', axis=0).dropna(how='all', axis=1).droplevel('VARNAMES:', axis=0) for fo in summary.index}
 
-# -------------------- calculate and save PPcov and PPinput --------------------------
-np.savetxt('Pantheon/Build/PP_full_F' + namefitopt + '_M' + namemuopt + '_COVd.txt', PPcov(mydf))
-np.savetxt('Pantheon/Build/PP_full_F' + namefitopt + '_M' + namemuopt + '_input.txt', PPinput(mydf))
+# -------------------- calculate PPcov and PPinput for individual files --------------
+print('input calculation for individual files')
+inp = [summary.loc[fo, 'weights'] * PPinput(dfs[fo]) for fo in summary.index]
+print('start covariance calculation for individual files ...')
+cov = [summary.loc[fo, 'weights'] * PPcov(dfs[fo]) for fo in summary.index]
+
+# -------------------- combine PPcov and PPinput -------------------------------------
+print('combine')
+allinp = (pd.concat(inp, axis=1).groupby(level=0, axis=1).sum()) / summary.weights.sum()
+allcov = pd.concat(cov, axis=1).groupby(level=0, axis=1).sum()
+
+# -------------------- save ----------------------------------------------------------
+print('save')
+np.savetxt('Pantheon/Build/PP_full_COVd.txt', np.array(allcov))
+np.savetxt('Pantheon/Build/PP_full_input.txt', np.array(allinp))
