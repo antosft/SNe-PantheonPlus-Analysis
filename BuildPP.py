@@ -47,8 +47,14 @@ cov = [summary.loc[fo, 'weights'] * PPcov(dfs[fo]) for fo in summary.index]
 
 # -------------------- combine PPcov and PPinput -------------------------------------
 print('combine')
+colinp = list(inp[0].columns)
+idxinp = list(inp[0].index)
 allinp = (pd.concat(inp, axis=1).groupby(level=0, axis=1).sum()) / summary.weights.sum()
+allinp = allinp.loc[idxinp, colinp]
+colcov = list(cov[0].columns)
+idxcov = list(cov[0].index)
 allcov = pd.concat(cov, axis=1).groupby(level=0, axis=1).sum()
+allcov = allcov.loc[idxcov, colcov]
 
 # -------------------- save ----------------------------------------------------------
 print('save')
