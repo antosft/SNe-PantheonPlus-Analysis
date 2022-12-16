@@ -4,7 +4,7 @@ Based on "Apparent cosmic acceleration from type Ia supernovae" by Dam, Heinesen
 
 ## BuildPP.py
 
-Run as `python BuildPP.py`, the specification of `FITOPT` and `MUOPT` are not needed anymore. Reads all files for all `FITOPT` but only `MUOPT000`. Reads `fitopts_summary.csv` to get the scales for the weighting of the `FITRES` files. Saves the output to `PP_full_COVd.txt` and `PP_full_input.txt`. 
+Run as `python BuildPP.py`, the specification of `FITOPT` and `MUOPT` are not needed anymore. Reads all files for all `FITOPT` but only `MUOPT000`. Reads `fitopts_summary.csv` to get the scales for the weighting of the `FITRES` files. Saves the output to `_COVd.txt` and `_input.txt` files. By specifying `mkposdef == True` at the beginning, 9 SNe with non-positive definite covariance matrices are dropped in the output. 
 
 ### fitopts_summary.csv
 
