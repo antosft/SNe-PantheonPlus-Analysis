@@ -18,7 +18,7 @@ def PPcov(fulldf, fitopt):
                      np.diagflat([jacentry(s, fulldf), 1, 1]), # Jacobi matrix
                      np.zeros((3, (len(fulldf.index) - s-1)*3))] for s in range(len(fulldf.index))]) # zero blocks in same row after cov block
     covdiag = np.block([[np.zeros((3, s*3)), # zero blocks in same row before cov block
-                         np.diagflat(np.array(fulldf.iloc[s].loc[['mBERR', 'x1ERR', 'cERR']])**2), # diagonal of cov
+                         np.diagflat(np.array(fulldf.iloc[s].loc[['x0ERR', 'x1ERR', 'cERR']])**2), # diagonal of cov
                          np.zeros((3, (len(fulldf.index) - s-1)*3))] for s in range(len(fulldf.index))]) # zero blocks in same row after cov block
     covlow = np.block([[np.zeros((3, s*3)), # zero blocks in same row before cov block
                         np.array([[0]*3, [fulldf.iloc[s].loc['COV_x1_x0']] + [0]*2, [fulldf.iloc[s].loc['COV_c_x0'], fulldf.iloc[s].loc['COV_x1_c'], 0]]), # cov matrix from PP for (x0, x1, c)
@@ -65,7 +65,7 @@ def boostz(z, RAdeg, DECdeg, vel=371.0, RA0=168.0118667, DEC0=-6.98303424):
 def PPinput(fulldf):
     myinput = fulldf.loc[:, ['zCMB', 'mB', 'x1', 'c', 'HOST_LOGMASS', 'IDSURVEY', 'zHEL', 'RA', 'DEC']]
     myinput.zCMB = boostz(fulldf.zHEL, fulldf.RA, fulldf.DEC)
-    myinput.loc[:, 'IDSURVEY'] = fulldf.index.value_counts()
+    #myinput.loc[:, 'IDSURVEY'] = fulldf.index.value_counts()
     myinput = myinput.groupby(level=0).mean() # combine duplicated SNe
     return myinput.sort_index()
 
