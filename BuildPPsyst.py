@@ -30,7 +30,8 @@ def PPcovFIT(fulldf, fitopt):
     idxcov = blockidx(fulldf.index)
     covdf.columns = idxcov
     covdf.index = idxcov
-    covdf = covdf.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() # combine duplicated SNe
+    normalize = (pd.DataFrame(covdf.index.value_counts()) @ pd.DataFrame(covdf.index.value_counts()).T) 
+    covdf = covdf.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() / normalize # combine duplicated SNe
     
     ew = np.linalg.eigvals(covdf)
     print(fitopt, ':', len(ew[ew < 0]), 'out of', len(ew), 'are less than 0, ', len(ew[ew == 0]), 'are equal to zero')
