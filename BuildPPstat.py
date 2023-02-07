@@ -9,8 +9,9 @@ nominalmu = 'MUOPT000'
 
 ###################### DEFINITIONS ###################################################
 def blockidx(indices): # indices of covariance matrix for given SNe
-    return np.sort(list(pd.Series(indices) + '_mB') + list(pd.Series(indices) + '_x1') + list(pd.Series(indices) + '_zc'))
-
+    form = pd.DataFrame(np.zeros((len(indices), 3)), index = indices, columns = ['mB', 'x1', 'zc'])
+    return np.array(['_'.join(col) for col in form.stack().index])
+    
 def jacentry(s, fulldf): # only non-trivial entry of Jacobian block matrices
     return -2.5 / np.log(10) / fulldf.iloc[s].loc['x0']
 
@@ -59,9 +60,12 @@ def PPcovDUPL(fulldf):
     orgdelta = val - ref
     sigmae = []
     for sn in np.unique(fulldf.index):
-        delta = pd.DataFrame(orgdelta).loc[blockidx([sn]), :]
-        sigma = delta @ delta.T
-        sigmae.append(sigma.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() / (len(delta) / 3)**2)
+        snN = fulldf.index.value_counts()[sn]
+        sigma = pd.DataFrame(np.zeros((3, 3)), index=blockidx([sn]), columns=blockidx([sn]))
+        if snN > 1:
+            sigma = pd.DataFrame({snx: {sny: (np.array(pd.DataFrame(orgdelta).loc[snx, :].T) @ np.array(pd.DataFrame(orgdelta).loc[sny, :]))[0, 0] 
+                                        for sny in blockidx([sn])} for snx in blockidx([sn])})
+        sigmae.append(sigma / (snN - 1))
     return pd.concat(sigmae).fillna(0)
 
 def PPcovSYST(fulldf, comparedf, scale): # systematic covariance according to Eq. (7) of Brout et al. 2022 (arXiv:2202.04077)
@@ -78,18 +82,23 @@ def PPcovSYST(fulldf, comparedf, scale): # systematic covariance according to Eq
 
 def PPcovSTAT(fulldf):
     fulldf = fulldf.sort_index()
-    # sigma_lens^2 = 0.055 * boostz
-    sigma2lens = pd.DataFrame(0.055 * boostz(fulldf.zHEL, fulldf.RA, fulldf.DEC))
+    # sigma_lens^2 = (0.055 * boostz)^2
+    sigma2lens = pd.DataFrame((0.055 * boostz(fulldf.zHEL, fulldf.RA, fulldf.DEC))**2)
     sigma2lens = sigma2lens.groupby(level=0).mean() # combine duplicated SNe
+    
     # sigma_z^2 = D_boostz**2
     # D_boostz = d/dz boostz(z) * D_z = (1 + (vel/C)*costheta) * D_z = boostz(D_z)
     sigma2z = pd.DataFrame(boostz(fulldf.zHELERR, fulldf.RA, fulldf.DEC)**2)
+    # sigma_z^2 - JLA approach # comment this line to use the boostz uncertainty (line above)
+    sigma2z  = pd.DataFrame(sigmaz_JLA(fulldf.zCMB)**2)
     normalize = pd.DataFrame(sigma2z.index.value_counts())
     normalize.columns = sigma2z.columns
     sigma2z = sigma2z.groupby(level=0).sum() / normalize**2 # combine duplicated SNe
+    
     # 3N x 3N matrix
     idxcov = blockidx(sigma2lens.index)
-    sigma2 = pd.concat([sigma2z + sigma2lens]*3, axis=1)
+    empty = pd.DataFrame(np.zeros(len(sigma2lens.index)), index=sigma2lens.index) # DataFrame with all zero entries (for x1 and c diagonal components of the covariance)
+    sigma2 = pd.concat([sigma2z + sigma2lens] + [empty]*2, axis=1)
     covdiag = pd.DataFrame(np.diagflat(np.array(sigma2.stack())))
     covdiag.columns = idxcov
     covdiag.index = idxcov
@@ -115,6 +124,11 @@ def boostz(z, RAdeg, DECdeg, vel=371.0, RA0=168.0118667, DEC0=-6.98303424):
     DEC0 = np.radians(DEC0)
     costheta = np.sin(DEC)*np.sin(DEC0) + np.cos(DEC)*np.cos(DEC0)*np.cos(RA-RA0) 
     return z + (vel/C)*costheta*(1+z)
+
+def sigmaz_JLA(z):
+    z.name = 0
+    c_speed = 299792458/1000 # km/s
+    return ((5 * 150 / c_speed) / np.log(10**z))
 
 # -------------------- select columns as in BuildJLACases ----------------------------
 def PPinput(fulldf):
@@ -168,7 +182,7 @@ eigenvalues(allcov, 'finalcov', allinp.index, returnsne=False) # check if result
 
 # -------------------- save ----------------------------------------------------------
 print('save')
-np.savetxt('Pantheon/Build/PP_ew_COVd.txt', np.array(allcov))
-np.savetxt('Pantheon/Build/PP_ew_input.txt', np.array(allinp))
+np.savetxt('Pantheon/Build/PP_stat_COVd.txt', np.array(allcov))
+np.savetxt('Pantheon/Build/PP_stat_input.txt', np.array(allinp))
 print('resulting shape:', allcov.shape, allinp.shape)
 print(allnegew)
