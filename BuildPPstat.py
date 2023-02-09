@@ -6,7 +6,6 @@ ewByFile = False # whether to calculate the eigenvalues within PPcovFIT (True) o
 mkposdef = True # force the covariance matrix to be positive definite by dropping the bad SNe. These SNe latter are printed at the end
 nominal = 'FITOPT000' # file used to get the statistical covariance and the reference values
 nominalmu = 'MUOPT000'
-includeBiasCorSigma = False
 
 ###################### DEFINITIONS ###################################################
 def blockidx(indices): # indices of covariance matrix for given SNe
@@ -67,11 +66,6 @@ def PPcovFIT(fulldf, fitopt):
     covdf.columns = idxcov
     covdf.index = idxcov
     
-    if includeBiasCorSigma:
-        f = pd.Series(fulldf.loc[:, ['biasCor_muCOVSCALE']*3].sort_index().stack())
-        f.index = idxcov
-        covdf = f * covdf
-    
     normalize = (pd.DataFrame(covdf.index.value_counts()) @ pd.DataFrame(covdf.index.value_counts()).T) 
     covdf = covdf.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() / normalize # combine duplicated SNe
     
@@ -101,15 +95,14 @@ def PPcovDUPL(fulldf):
     return sigmadupl + const
 
 def PPcovSYST(fulldf, comparedf, scale): # systematic covariance according to Eq. (7) of Brout et al. 2022 (arXiv:2202.04077)
-    fulldf = fulldf.sort_index() # mu
-    val = pd.DataFrame(fulldf.loc[:, ['mB', 'x1', 'c']].stack())
-    val.index = blockidx(fulldf.index)
-    comparedf = comparedf.sort_index() # reference value of delta mu
-    ref = pd.DataFrame(comparedf.loc[:, ['mB', 'x1', 'c']].stack())
-    ref.index = blockidx(comparedf.index)
+    usedf = fulldf.sort_index().groupby(level=0, axis=0).mean() # mu
+    val = pd.DataFrame(usedf.loc[:, ['mB', 'x1', 'c']].stack())
+    val.index = blockidx(usedf.index)
+    usecomparedf = comparedf.sort_index().groupby(level=0, axis=0).mean() # reference value of delta mu
+    ref = pd.DataFrame(usecomparedf.loc[:, ['mB', 'x1', 'c']].stack())
+    ref.index = blockidx(usecomparedf.index)
     delta = (val - ref) * scale # d delta mu / d S * sigma
     systdf = delta @ delta.T
-    systdf = systdf.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() # combine duplicated SNe
     return systdf # return covariance contribution of a single psi
 
 def PPcovSTAT(fulldf):
@@ -122,13 +115,9 @@ def PPcovSTAT(fulldf):
     sigma2z = pd.DataFrame(boostz(fulldf.zHELERR, fulldf.RA, fulldf.DEC)**2)
     # sigma_z^2 - JLA approach # comment line below to use the boostz uncertainty (line above)
 #     sigma2z  = pd.DataFrame(sigmaz_JLA(fulldf.zCMB)**2)
-    
-    sigma2floor = sigma2z * 0 + 0.1
-    if includeBiasCorSigma:
-        sigma2floor.iloc[:, 0] = fulldf.biasCor_muCOVADD
-    
+        
     # 3N x 3N matrix
-    sigma2 = offdiagduplicates(magmagmatrix(sigma2z + sigma2lens + sigma2floor)) # populate entries with same SNe (with and without same survey)
+    sigma2 = offdiagduplicates(magmagmatrix(sigma2z + sigma2lens)) # populate entries with same SNe (with and without same survey)
     normalize = (pd.DataFrame(sigma2.index.value_counts()) @ pd.DataFrame(sigma2.index.value_counts()).T) 
     sigma2 = sigma2.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum() / normalize # combine duplicated SNe
     return sigma2
@@ -214,8 +203,9 @@ allcov = allcov.loc[idxcov, colcov]
 eigenvalues(allcov, 'finalcov', allinp.index, returnsne=False) # check if resulting matrix has negative eigenvalues
 
 # -------------------- save ----------------------------------------------------------
-print('save')
-np.savetxt('Pantheon/Build/PP_BBCfalse_COVd.txt', np.array(allcov))
-np.savetxt('Pantheon/Build/PP_BBCfalse_input.txt', np.array(allinp))
+versionname = 'nofloor'
+print('save', versionname)
+np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(allcov))
+np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(allinp))
 print('resulting shape:', allcov.shape, allinp.shape)
 print(allnegew)
