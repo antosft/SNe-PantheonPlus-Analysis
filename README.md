@@ -26,6 +26,10 @@ Upgrade of `BuildPP.py`. Changes are focused on the systematic covariances of th
 
 Upgrade of `BuildPPmu.py`. Account for statistical covariances in terms of $\sigma_z^2$ and $\sigma_{lens}^2$, as explained under $\Sigma_{stat}$ in `how_to_covariance.py`. By specifying `ewByFile = False` at the beginning, SNe the eigenvalues of the full covariance matrix are considered instead of the eigenvalues of the blocks $\Sigma_{fit}$. Keep `ewByFile = True` to ensure a semi-positive covariance matrix.
 
+### BuildPP1537.py and BuildPP1690.py
+
+Final versions including all terms described in `how_to_covariance.py`, with (`BuildPP1537.py`) or without (`BuildPP1690.py`) the gray parts.
+
 ## Input files 
 
 ### fitopts_summary.csv
