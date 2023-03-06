@@ -30,6 +30,10 @@ Upgrade of `BuildPPmu.py`. Account for statistical covariances in terms of $\sig
 
 Final versions including all terms described in `how_to_covariance.py`, with (`BuildPP1537.py`) or without (`BuildPP1690.py`) the gray parts.
 
+### BuildPP1537random.py and BuildPP1690random.py
+
+Upgrade of `BuildPP1537.py` and `BuildPP1690.py`) including random sampling of the supernovae in the computed `_input.txt` file (and changing the covariance accordingly). To do this, pass the seeds for the calculation to the variable `seedreduce`.
+
 ## Input files 
 
 ### fitopts_summary.csv
