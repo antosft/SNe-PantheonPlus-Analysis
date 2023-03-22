@@ -23,10 +23,11 @@ import matplotlib.pyplot as plt
 import time
 from distmod_random import rundistmod
 
-Nseeds = 50 # choose Nseeds = 0 to run it on a single file instead of 
+Nseeds = 50 # choose Nseeds = 0 to run it on a single file instead of the Nseeds random subsamples
 versionname = '1690' # base sample from which the data was generated; for Nseeds == 0, 'PP_' + versionname + '_input.txt' etc. are used
 Nsamples = [580, 660, 750, 875, 1000] # sample sizes of the random subsamples
 zcuts = np.linspace(0,0.1,41) # alternative: [0.01, 0.033, 0.05, 0.075, 0.1]
+constructdistmod = True # whether the distmod code is to be run before the frequentist loop
 
 # ===============================================================================================
 
@@ -291,8 +292,9 @@ if __name__ == '__main__'
         prefix = 'Pantheon/Build/PP_' + versionname + '_'
         outputprefix = prefix
         print(prefix, outputprefix)
-        rundistmod(prefix)
-        print('finished distmod in {0:.02f} minutes'.format((time.time() - start)/60))
+        if constructdistmod:
+            rundistmod(prefix)
+            print('finished distmod in {0:.02f} minutes'.format((time.time() - start)/60))
         runfreq(prefix, outputprefix, zcuts)
         print('finished frequentist in {0:.02f} minutes'.format((time.time() - start)/60))
 
@@ -302,9 +304,10 @@ if __name__ == '__main__'
             for seed in range(Nseeds):
                 prefix = 'Pantheon/Build/PP_' + versionname + 'random' + str(m) + '_' + str(seed) + '_'
                 print('\n', prefix)
-                rundistmod(prefix)
+                if constructdistmod:
+                    rundistmod(prefix)
+                    print(m, seed, 'finished distmod in {0:.02f} minutes'.format((enddist - startdist)/60))
                 enddist = time.time()
-                print(m, seed, 'finished distmod in {0:.02f} minutes'.format((enddist - startdist)/60))
                 runfreq(prefix, prefix, zcuts)
                 startdist = time.time()
                 print('\n', m, seed, 'finished frequentist in {0:.02f} minutes'.format((startdist - enddist)/60))
