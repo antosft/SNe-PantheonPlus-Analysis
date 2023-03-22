@@ -14,7 +14,7 @@ Run as `python freq_loop.py` after specifying `Nseeds`, `versionname`, `Nsamples
 
 ### Bayesian: `bayes_singlecut.py`
 
-Run as `bayes_singlecut.py model z_cut 0 1 2 nlive tolerance` or call `runbayes(0, model z_cut, 0, 1, 2, nlive, tolerance)`. We chose `model = 1` (timescape) or `model = 2` ($\Lambda$CDM), varying `z_cut`, `nlive = 1000` and `tolerance = 1e-5`.
+Run as `bayes_singlecut.py model z_cut 0 1 2 nlive tolerance` or call `runbayes(0, model z_cut, 0, 1, 2, nlive, tolerance)`. We chose `model = 1` (timescape) or `model = 2` (LCDM), varying `z_cut`, `nlive = 1000` and `tolerance = 1e-5`.
 
 ### `loadsplines.py`
 
