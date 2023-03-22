@@ -4,6 +4,8 @@ Based on "Apparent cosmic acceleration from type Ia supernovae" by Dam, Heinesen
 
 ## Build files and run the statistics code
 
+Pipeline: `BuildPP.py` > `distmod.py` > `freq_loop.py` / `bayes_singlecut.py` (calling `loadsplines.py`)
+
 ### `BuildPP.py`
 
 Run as `python BuildPP.py`. Reads all calibration files as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `PP_1690_input.txt` and `PP_1690_COVd.txt` (`1690` is replaced when considering the random subsamples).
