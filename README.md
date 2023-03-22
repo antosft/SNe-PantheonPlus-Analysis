@@ -2,43 +2,37 @@
 
 Based on "Apparent cosmic acceleration from type Ia supernovae" by Dam, Heinesen, Wiltshire (2017) https://arxiv.org/pdf/1706.07236.pdf arxiv:1706.07236 
 
-## Build `_input.txt` and `_COVd.txt` files
+## Build files and run the statistics code
 
+### `BuildPP.py`
 
+Run as `python BuildPP.py`. Reads all calibration files as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `PP_1690_input.txt` and `PP_1690_COVd.txt` (`1690` is replaced when considering the random subsamples).
 
-### BuildPP.py
+### Frequentist
 
-Run as `python BuildPP.py`. Reads all files for all `FITOPT` but only `MUOPT000`. Reads `fitopts_summary.csv` to get the scales for the weighting of the `FITRES` files. Computes the sum of all statistical covariances of the fits in the different `FITOPT` files. Saves the output to `_posdef_COVd.txt` and `_posdef_input.txt` files. By specifying `mkposdef = True` at the beginning, SNe with non-positive definite covariance matrices are dropped in the output. 
+### Bayesian
 
-### BuildPPsyst.py
+### Spline
 
-Upgrade of `BuildPP.py`. $\Sigma_{fit}$ (as in `BuildPP.py`, cf. `how_to_covariance.py`) now considering `FITOPT000` only. Other changes are focused on the systematic covariances of the other `FITOPT` files with respect to `FITOPT000` (cf. Eq. (7) of Brout et al. 2022, arXiv:2202.04077). The saved covariance includes the sum of all of these. For further information on the calculation see $\Sigma_{FITOPTS}$ in `how_to_covariance.py`.
+### `distmod.py`
 
-### BuildPPdupl.py
+Run as `python distmodPP.py '1690'` to calculate the splined interpolation tables of the distance moduli from the `PP_1690_input.txt` file. Alternatively, import this file and run `rundistmod('path/to/PP_1690_input.txt')` from any other script. The results are stored in `PP_1690_tabledL_lcdm.npy` for the standard model and `PP_1690_tabledL_ts.npy` for timescape.
 
-Upgrade of `BuildPPsyst.py`. Account for covariances of duplicated SNe, as explained under $\Sigma_{dupl}$ in `how_to_covariance.py`.
-
-### BuildPPmu.py
-
-Upgrade of `BuildPP.py`. Changes are focused on the systematic covariances of the other `MUOPT` files with respect to `MUOPT000` (cf. Eq. (7) of Brout et al. 2022, arXiv:2202.04077). The saved covariance includes the sum of all of these. For further information on the calculation see $\Sigma_{MUOPTS}$ in `how_to_covariance.py`.
-
-### BuildPPstat.py
-
-Upgrade of `BuildPPmu.py`. Account for statistical covariances in terms of $\sigma_z^2$ and $\sigma_{lens}^2$, as explained under $\Sigma_{stat}$ in `how_to_covariance.py`. By specifying `ewByFile = False` at the beginning, SNe the eigenvalues of the full covariance matrix are considered instead of the eigenvalues of the blocks $\Sigma_{fit}$. Keep `ewByFile = True` to ensure a semi-positive covariance matrix.
-
-### BuildPP1537.py and BuildPP1690.py
-
-Final versions including all terms described in `how_to_covariance.py`, with (`BuildPP1537.py`) or without (`BuildPP1690.py`) the gray parts.
-
-### BuildPP1537random.py and BuildPP1690random.py
-
-Upgrade of `BuildPP1537.py` and `BuildPP1690.py`) including random sampling of the supernovae in the computed `_input.txt` file (and changing the covariance accordingly). To do this, pass the seeds for the calculation to the variable `seedreduce`.
+## Plotting
 
 ## Input files 
 
-### fitopts_summary.csv
+### `fitopts_summary.csv`
 
-File with information and weighting scale for all `FITRES` files. Called by `BuildPP.py`.
+File with information and weighting scale for `FITRES` files with varying `FITOPTS`. Called by `BuildPP.py`.
+
+### `muopts_summary.csv`
+
+File with information and weighting scale for `FITRES` files with varying `MUOPTS`. Called by `BuildPP.py`.
+
+### `joinedsample_CID+IDSURVEY.csv`
+
+IDs (in the Pantheon+ notation) of the supernovae in the Pantheon+/JLA common subsample. Called by `BuildPP.py`.
 
 ### .FITRES files
 
