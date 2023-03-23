@@ -41,7 +41,7 @@ Import the function `Parameter_Strip as ParS` to load the output from `bayes_sin
 `data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T`  
 `Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
-## Input files 
+## Input files (within folder `Pantheon`)
 
 ### `fitopts_summary.csv`
 
@@ -55,7 +55,7 @@ File with information and weighting scale for `FITRES` files with varying `MUOPT
 
 IDs (in the Pantheon+ notation) of the supernovae in the Pantheon+/JLA common subsample. Called by `BuildPP.py`.
 
-### .FITRES files
+### `.FITRES` files
 
 Calibration files from folder `calibration_files` of the Pantheon+ survey for different `FITOPT` and `MUOPT` parameters. To large for upload. Read by `BuildPP.py`.
 
