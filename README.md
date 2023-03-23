@@ -24,7 +24,7 @@ Called by `bayes_singlecut.py` for loading the splined distance moduli from the 
 
 ### `distmod.py`
 
-Run as `python distmodPP.py '1690'` to calculate the splined interpolation tables of the distance moduli from the `PP_1690_input.txt` file. Alternatively, import this file and run `rundistmod('path/to/PP_1690_input.txt')` from any other script. The results are stored in `PP_1690_tabledL_lcdm.npy` for the standard model and `PP_1690_tabledL_ts.npy` for timescape.
+Run as `python distmodPP.py 'NAME'` to calculate the splined interpolation tables of the distance moduli from the `PP_NAME_input.txt` file. Alternatively, import this file and run `rundistmod('path/to/PP_NAME_input.txt')` from any other script. The results are stored in `Pantheon/Build/PP_NAME_tabledL_lcdm.npy` for the standard model and `Pantheon/Build/PP_NAME_tabledL_ts.npy` for timescape.
 
 ## Plotting
 
