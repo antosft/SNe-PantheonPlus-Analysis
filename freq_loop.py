@@ -19,7 +19,6 @@
 import sys
 import numpy as np
 from scipy import interpolate, linalg, optimize
-import matplotlib.pyplot as plt
 import time
 from distmod_random import rundistmod
 

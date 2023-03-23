@@ -1,4 +1,3 @@
-from __future__ import division
 from scipy import interpolate
 import numpy as np
 
