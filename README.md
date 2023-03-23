@@ -20,7 +20,7 @@ Run as `python freq_loop.py` after specifying `Nseeds`, `versionname`, `Nsamples
 
 ### Bayesian: `bayes_singlecut.py`
 
-Run as `bayes_singlecut.py modelidx z_cut 0 1 2 nlive tolerance 'NAME'` or call `runbayes(0, modelidx, z_cut, 0, 1, 2, nlive, tolerance, 'NAME')`. We chose `nlive = 1000` and `tolerance = 1e-5`, `modelidx = 1` (timescape) or `modelidx = 2` (LCDM), `NAME` as specified in `BuildPP.py` and varying `z_cut`.
+Run as `bayes_singlecut.py modelidx z_cut 0 1 2 nlive tolerance 'NAME'` or call `runbayes(0, modelidx, z_cut, 0, 1, 2, nlive, tolerance, 'NAME')`. We chose `nlive = 1000` and `tolerance = 1e-5`, `modelidx = 1` (timescape) or `modelidx = 2` (LCDM), `NAME` as specified in `BuildPP.py` and varying `z_cut`. This script needs the PyMultinest package to be run successfully.
 
 ### `loadsplines.py`
 
