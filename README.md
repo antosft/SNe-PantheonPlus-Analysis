@@ -35,10 +35,10 @@ Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `fr
 ### `parameter_MLE.py`
 
 Import the function `Parameter_Strip as ParS` to load the output from `bayes_singlecut.py` for varying `z_cut` (the list of `z_cuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayes_singlecut.py`, e.g. via  
-`getresults = list(ParS('Pantheon_', modelidx, tolerance, 'NAME', '', 13))  
-omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)  
-getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]  
-data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T`  
+`getresults = list(ParS('Pantheon_', modelidx, tolerance, 'NAME', '', 13))`  
+`omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)`  
+`getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]`  
+`data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T`  
 `Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
 ## Input files 
