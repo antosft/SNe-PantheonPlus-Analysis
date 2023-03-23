@@ -57,7 +57,7 @@ File with information and weighting scale for `FITRES` files with varying `MUOPT
 
 ### `joinedsample_CID+IDSURVEY.csv`
 
-IDs (in the Pantheon+ notation) of the supernovae in the Pantheon+/JLA common subsample. Called by `BuildPP.py`.
+IDs (in the Pantheon+ notation) and survey IDs (see https://github.com/PantheonPlusSH0ES/DataRelease/blob/main/Pantheon%2B_Data/4_DISTANCES_AND_COVAR/README for the definition) of the supernovae in the Pantheon+/JLA common subsample. Called by `BuildPP.py`.
 
 ### `.FITRES` files
 
