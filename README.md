@@ -4,7 +4,7 @@ Our statistical analysis is based on "Apparent cosmic acceleration from type Ia 
 
 The data sets and covariances used for the analysis are build from `BuildPP.py` and `BuildJLA.py`. The data sets consider redshifts in CMB frame calculated from the published heliocentric redshifts. The construction of the covariance matrix for the Pantheon+ data is described in `how_to_covariance.py` (https://github.com/antosft/SNe-PantheonPlus-Analysis/blob/main/how_to_covariance.ipynb).
 
-The code for the Bayesian analysis (see below) requires the Multinest module (Feroz et al. 2008, https://academic.oup.com/mnras/article/398/4/1601/981502, arXiv:0809.3437) and the Python interface PyMultinest to be installed (Buchner et al. 2014, https://www.aanda.org/articles/aa/abs/2014/04/aa22971-13/aa22971-13.html, arXiv:1402.0004) as described by https://johannesbuchner.github.io/PyMultiNest/install.html#installing-the-python-module. The Pymultinest can only be installed on linux systems, so for running the bayesian nested code, ensure you are running linux and Python 2.7.
+The code for the Bayesian analysis (see below) requires the Multinest module (Feroz et al. 2008, https://academic.oup.com/mnras/article/398/4/1601/981502, arXiv:0809.3437) and the Python interface PyMultinest to be installed (Buchner et al. 2014, https://www.aanda.org/articles/aa/abs/2014/04/aa22971-13/aa22971-13.html, arXiv:1402.0004) as described by https://johannesbuchner.github.io/PyMultiNest/install.html#installing-the-python-module. The PyMultinest package can only be installed on linux systems, so for running the bayesian nested code, ensure you are running linux and Python 2.7.
 
 ## Build files and run the statistics code
 
