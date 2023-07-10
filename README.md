@@ -17,7 +17,7 @@ Run as `python BuildPP.py`. Reads all `.FITRES` files from the `Pantheon/calibra
 ### Frequentist: `freq_loop.py`
 
 Run as `python freq_loop.py` after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar). Call `runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])` if working from a different script.  
-An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`
+An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`.
 
 ### Bayesian: `bayes_singlecut.py`
 
