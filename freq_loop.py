@@ -305,6 +305,7 @@ if __name__ == '__main__'
                 print('\n', prefix)
                 if constructdistmod:
                     rundistmod(prefix)
+                    enddist = time.time()
                     print(m, seed, 'finished distmod in {0:.02f} minutes'.format((enddist - startdist)/60))
                 enddist = time.time()
                 runfreq(prefix, prefix, zcuts)
