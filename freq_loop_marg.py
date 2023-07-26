@@ -204,12 +204,12 @@ def runfreq(prefixinp, prefixsav, zC=np.linspace(0,0.1,41)):
                 return np.sqrt(np.abs(VM) + np.abs(VX)*A**2 + np.abs(VC)*B**2)
             
             def m2loglike(pars , cov_params_ = cov_params, res_params_ = res_params):
-                y = integrationcenter( *[ pars[i] for i in res_params_ ] )
+                y = 0#integrationcenter( *[ pars[i] for i in res_params_ ] )
                 sigmay = integrationwidth(*[ pars[i] for i in cov_params_ ])
                 Ldeltamu0 = lambda dmu0 : m2loglikedeltamu0(pars , cov_params_ = cov_params, res_params_ = res_params, deltamu0=dmu0)
                 integral = integrate.quad(Ldeltamu0, y - 3 * sigmay, y + 3 * sigmay)
                 # print(integral)
-                return integral[0] #m2loglikedeltamu0(pars , cov_params_ = cov_params, res_params_ = res_params, deltamu0=0)
+                return integral[0] / (6 * sigmay) #m2loglikedeltamu0(pars , cov_params_ = cov_params, res_params_ = res_params, deltamu0=0)
             
             def m2CONSflat( pars ):  # Constraint flat universe
                 return pars[0] + pars[1] - 1
