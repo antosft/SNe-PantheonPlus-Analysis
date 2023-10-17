@@ -60,6 +60,10 @@ File with information and weighting scale for `FITRES` files with varying `MUOPT
 
 IDs (in the Pantheon+ notation) and survey IDs (see https://github.com/PantheonPlusSH0ES/DataRelease/blob/main/Pantheon%2B_Data/4_DISTANCES_AND_COVAR/README for the definition) of the supernovae in the Pantheon+/JLA common subsample. Called by `BuildPP.py`.
 
-### `.FITRES` files
+### `.FITRES` files within `calibration_files` folder
 
 Calibration files from folder `calibration_files` of the Pantheon+ survey for different `FITOPT` and `MUOPT` parameters. To large for upload. Read by `BuildPP.py`.
+
+### `Build` folder
+
+All input (`_input.txt`) and covariance (`_COVd.txt`) files go here or in subfolders of this folder. They are build by `BuildPP.py` and read by `distmod.py`, `freq_loop.py`, `bayesian_pipe.py`, etc. The outputs of `distmod.py` and `freq_loop.py` are also saved and read from here.
