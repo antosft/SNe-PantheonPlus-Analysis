@@ -246,7 +246,7 @@ if __name__ == '__main__':
 	nlive = int(sys.argv[6])    # number of live points used in sampling
 	tol = float(sys.argv[7])    # stop evidence integral when next contribution less than tol
 	versionname = sys.argv[8]   # input file: 'Pantheon/Build/PP_' + versionname + '_input.txt' (see spline_pipe.py)
-	folder = 'pipeoutput'
+	folder = 'outputpipe'
 	try:
 		folder = folder + '/' + sys.argv[9]
 	except:
