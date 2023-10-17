@@ -21,7 +21,7 @@ An adapted version of this code that includes the marginalising procedure is ava
 
 ### Bayesian: `bayesian_pipe.py`
 
-Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` ($\Lambda$CDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results are written to `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
+Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` (LCDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results are written to `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
 
 ### `spline_pipe.py`
 
@@ -44,7 +44,7 @@ Import the function `Parameter_Strip as ParS` to load the output from `bayesian_
 `omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)`  
 `getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]`  
 `data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T`  
-`Q` refers to `omega` for $\Lambda$CDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
+`Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
 ## Input files (within folder `Pantheon`)
 
