@@ -19,7 +19,7 @@ Run as `python BuildPP.py`. Reads all `.FITRES` files from the `Pantheon/calibra
 Run as `python freq_loop.py` after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar). Call `runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])` if working from a different script.  
 An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`.
 
-### Bayesian: `bayesian_pipe.py` and `spline.py`
+### Bayesian: `bayesian_pipe.py` and `spline_pipe.py`
 
 Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` (LCDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results and calculations from the MultiNest are saved with the prefix `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
 
