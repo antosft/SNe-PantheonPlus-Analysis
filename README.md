@@ -21,7 +21,7 @@ An adapted version of this code that includes the marginalising procedure is ava
 
 ### Bayesian: `bayesian_pipe.py`
 
-Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` (LCDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results are written to `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
+Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` (LCDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results and calculations from the MultiNest are saved with the prefix `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
 
 ### `spline_pipe.py`
 
@@ -39,7 +39,7 @@ Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `fr
 
 ### `parameter_MLE.py`
 
-Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
+Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` that was saved to `outputpipe/NAME/MODEL/Pantheon_modelidx_zcut_0_1_2_1000_tolerance_stats.dat` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
 `getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))`  
 `omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)`  
 `getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]`  
