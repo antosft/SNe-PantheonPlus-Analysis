@@ -8,7 +8,7 @@ The code for the Bayesian analysis (see below) requires the Multinest module (Fe
 
 ## Build files and run the statistics code
 
-Pipeline: `BuildPP.py` > `distmod.py` > `freq_loop.py` / `bayes_singlecut.py` (calling `loadsplines.py`) > use `parameter_freq.py` / `parameter_MLE.py` to extract the results from the output files
+Pipeline: `BuildPP.py` > `distmod.py` > `freq_loop.py` / `bayesian_pipe.py` (calling `spline_pipe.py`) > use `parameter_freq.py` / `parameter_MLE.py` to extract the results from the output files
 
 ### `BuildPP.py`
 
@@ -19,13 +19,13 @@ Run as `python BuildPP.py`. Reads all `.FITRES` files from the `Pantheon/calibra
 Run as `python freq_loop.py` after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar). Call `runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])` if working from a different script.  
 An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`.
 
-### Bayesian: `bayes_singlecut.py`
+### Bayesian: `bayesian_pipe.py`
 
-Run as `bayes_singlecut.py modelidx z_cut 0 1 2 nlive tolerance 'NAME'` or call `runbayes(0, modelidx, z_cut, 0, 1, 2, nlive, tolerance, 'NAME')`. We chose `nlive = 1000` and `tolerance = 1e-5`, `modelidx = 1` (timescape) or `modelidx = 2` (LCDM), `NAME` as specified in `BuildPP.py` and varying `z_cut`. This script needs the PyMultinest package to be run successfully.
+Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` ($\Lambda$CDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results are written to `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
 
-### `loadsplines.py`
+### `spline_pipe.py`
 
-Called by `bayes_singlecut.py` for loading the splined distance moduli from the `distmod.py` outputs.
+Called by `bayesian_pipe.py` for loading the splined distance moduli from the `distmod.py` outputs.
 
 ### `distmod.py`
 
@@ -39,12 +39,12 @@ Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `fr
 
 ### `parameter_MLE.py`
 
-Import the function `Parameter_Strip as ParS` to load the output from `bayes_singlecut.py` for varying `z_cut` (the list of `z_cuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayes_singlecut.py`, e.g. via  
-`getresults = list(ParS('Pantheon_', modelidx, tolerance, 'NAME', '', 13))`  
+Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
+`getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))`  
 `omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)`  
 `getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]`  
 `data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T`  
-`Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
+`Q` refers to `omega` for $\Lambda$CDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
 ## Input files (within folder `Pantheon`)
 
