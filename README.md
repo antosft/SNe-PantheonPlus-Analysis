@@ -35,15 +35,17 @@ Run as `python distmod.py 'NAME'` to calculate the splined interpolation tables 
 
 ### `parameter_freq.py`
 
-Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `freq_loop.py`, e.g. via `pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T` for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']`.
+Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `freq_loop.py`, e.g. via  
+```data = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T```  
+for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']`.
 
 ### `parameter_MLE.py`
 
 Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` that was saved to `outputpipe/NAME/MODEL/Pantheon_modelidx_zcut_0_1_2_1000_tolerance_stats.dat` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
-`getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))`  
-`omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)`  
-`getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]`  
-`data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T`  
+```getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))  
+omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)  
+getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]  
+data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T```  
 `Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
 ## Input files (within folder `Pantheon`)
