@@ -12,7 +12,7 @@ Pipeline: `BuildPP.py` > `distmod.py` > `freq_loop.py` / `bayesian_pipe.py` (cal
 
 ### `BuildPP.py`
 
-Run as `python BuildPP.py`. Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand.
+Run as `python BuildPP.py`. Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. A priori, the files for P+1690 (called `PP_1690`) and P+580 (called `PP_1690jla`) are saved as outputs. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand.
 
 ### `BuildJLA.py` and the `JLA_data` folder
 
@@ -31,7 +31,7 @@ Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. W
 
 Run as `python distmod.py 'NAME'` to calculate the splined interpolation tables of the distance moduli from the `PP_NAME_input.txt` file. Alternatively, import this file and run `rundistmod('path/to/PP_NAME_input.txt')` from any other script. The results are stored in `Pantheon/Build/PP_NAME_tabledL_lcdm.npy` for the standard model and `Pantheon/Build/PP_NAME_tabledL_ts.npy` for timescape.
 
-## Plotting
+## Read output files for plotting
 
 ### `parameter_freq.py`
 
