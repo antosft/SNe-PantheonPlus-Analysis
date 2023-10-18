@@ -8,7 +8,7 @@ The code for the Bayesian analysis (see below) requires the Multinest module (Fe
 
 ## Build files and run the statistics code
 
-Pipeline: `BuildPP.py` > `distmod.py` > `freq_loop.py` / `bayesian_pipe.py` (calling `spline_pipe.py`) > use `parameter_freq.py` / `parameter_MLE.py` to extract the results from the output files
+Pipeline: `BuildPP.py` / `BuildJLA.py` > `distmod.py` > `freq_loop.py` / `bayesian_pipe.py` (calling `spline_pipe.py`) > use `parameter_freq.py` / `parameter_MLE.py` to extract the results from the output files
 
 ### `BuildPP.py`
 
