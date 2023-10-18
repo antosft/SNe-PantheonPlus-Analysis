@@ -12,20 +12,40 @@ Pipeline: `BuildPP.py` > `distmod.py` > `freq_loop.py` / `bayesian_pipe.py` (cal
 
 ### `BuildPP.py`
 
-Run as `python BuildPP.py`. Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. A priori, the files for P+1690 (called `PP_1690`) and P+580 (called `PP_1690jla`) are saved as outputs. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand.
+Run as 
+```
+python BuildPP.py
+```
+Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. A priori, the files for P+1690 (called `PP_1690`) and P+580 (called `PP_1690jla`) are saved as outputs. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand.
 
 ### `BuildJLA.py` and the `JLA_data` folder
 
-Run as `python BuildJLA.py`. Reads the previously downloaded JLA data from the `JLA_data` folder. Random subsamples are constructted by the `random_JLA(...)` function at the end. The output, including the files for the common subsample JLA580, is saved to `Pantheon/Build/PP_JLA_Common/NAME_input.txt` and `Pantheon/Build/PP_JLA_Common/NAME_COVd.txt`.
+Run as 
+```
+python BuildJLA.py
+```
+Reads the previously downloaded JLA data from the `JLA_data` folder. Random subsamples are constructted by the `random_JLA(...)` function at the end. The output, including the files for the common subsample JLA580, is saved to `Pantheon/Build/PP_JLA_Common/NAME_input.txt` and `Pantheon/Build/PP_JLA_Common/NAME_COVd.txt`.
 
 ### Frequentist: `freq_loop.py` and `freq_loop_marg.py`
 
-Run as `python freq_loop.py` after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar). Call `runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])` if working from a different script.  
+Run as 
+```
+python freq_loop.py
+```
+after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar). Call 
+```
+runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])
+```
+if working from a different script.  
 An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`.
 
 ### Bayesian: `bayesian_pipe.py` and `spline_pipe.py`
 
-Run as `bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'`. We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` (LCDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results and calculations from the MultiNest are saved with the prefix `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
+Run as 
+```
+bayesian_pipe.py modelidx zcut 0 1 2 nlive tolerance 'NAME' 'FOLDER'
+```
+We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for appropriate calling of files by `parameter_MLE.py`), `modelidx = 1` / `MODEL = Timescape` (timescape) or `modelidx = 2` / `MODEL = LCDM` (LCDM), `NAME` as specified in `BuildPP.py` and varying redshift cut `zcut`. The results and calculations from the MultiNest are saved with the prefix `outputpipe/FOLDER/Pantheon_modelidx_zcut_0_1_2_1000_tolerance`. This script needs the PyMultinest package and the `spline_pipe.py` file to be run successfully.
 
 ### `distmod.py`
 
@@ -36,7 +56,9 @@ Run as `python distmod.py 'NAME'` to calculate the splined interpolation tables 
 ### `parameter_freq.py`
 
 Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `freq_loop.py`, e.g. via  
-```data = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T```  
+```
+data = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T
+```  
 for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']`.
 
 ### `parameter_MLE.py`
@@ -44,9 +66,6 @@ for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']
 Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` that was saved to `outputpipe/NAME/MODEL/Pantheon_modelidx_zcut_0_1_2_1000_tolerance_stats.dat` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
 ```
 getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))
-```  
-test
-```
 omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)
 getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]
 data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T
