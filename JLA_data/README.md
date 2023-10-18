@@ -1,0 +1,1 @@
+The JLA data files for the input and covariance should go here. They can be obtained from http://cdsarc.u-strasbg.fr/viz-bin/qcat?J/A+A/568/A22 and http://supernovae.in2p3.fr/sdss_snls_jla/covmat_v6.tgz.
