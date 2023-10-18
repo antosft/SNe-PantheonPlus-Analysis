@@ -9,7 +9,7 @@ nominalmu = 'MUOPT000'
 reducelowz = False # whether to reduce the excess of low-redshift SNe to an amount similar to the JLA/P+ subsample
 Nseeds = 0 # number of random subsamples to be drawn
 m = 580 # size of the random subsamples
-chooseoptions = ['low', 'high'] # for 'high', the third with highest zCMB is fully taken and the other two are chosen randomly
+chooseoptions = []#'low', 'high'] # for 'high', the third with highest zCMB is fully taken and the other two are chosen randomly
 # other possibilities: 'low' (the other way round) or 'none' (usual random subsample with same distribution as the full one)
 
 ###################### DEFINITIONS ###################################################
@@ -197,27 +197,43 @@ colcov = idxcov
 allcov = allcov.loc[idxcov, colcov]
 eigenvalues(allcov, 'finalcov', allinp.index, returnsne=False) # check if resulting matrix has negative eigenvalues
 
-###################### SAVE NOMINAL SAMPLE & REDUCED LOW Z SUBSAMPLE #################
-versionname = '1690'
+###################### SAVE NOMINAL SAMPLES & REDUCED LOW Z SUBSAMPLE ################
 if Nseeds == 0:
+    versionname = 't1690'
+    print('save', versionname)
+    np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(allcov))
+    np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(allinp))
+    print('resulting shape:', allcov.shape, allinp.shape)
+    print(allnegew)
+    
+    versionname = 't1690jla'
+    jla = np.array(pd.read_csv('Pantheon/joinedsample_CID+IDSURVEY.csv', index_col=0).T)[0]
+    subinp = allinp.loc[np.intersect1d(jla, allinp.index)]
+    idxcov = blockidx(allinp.index)
+    colcov = idxcov
+    subcov = allcov.loc[idxcov, colcov]
+    print('save', versionname)
+    np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(subcov))
+    np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(subinp))
+    print('resulting shape:', subcov.shape, subinp.shape)
+
     # -------------------- reduce low-redshift population ----------------------------
     if reducelowz:
+        versionname = '1690lesslowz'
         highz = allinp.loc[allinp.zCMB >= 5e-2].index
         lowz = allinp.loc[allinp.zCMB < 5e-2].index
-        jla = np.array(pd.read_csv('Pantheon/joinedsample_CID+IDSURVEY.csv', index_col=0).T)[0]
-        subinp = allinp.loc[np.intersect1d(jla, allinp.index)]
         frac = (subinp.loc[subinp.zCMB < 5e-2].shape[0] / subinp.shape[0]) / (len(lowz) / allinp.shape[0])
         allinp = pd.concat([allinp.loc[lowz].sample(frac = frac), allinp.loc[highz]])
         idxcov = blockidx(allinp.index)
         colcov = idxcov
         allcov = allcov.loc[idxcov, colcov]
 
-    # -------------------- save ------------------------------------------------------
-    print('save', versionname)
-    np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(allcov))
-    np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(allinp))
-    print('resulting shape:', allcov.shape, allinp.shape)
-    print(allnegew)
+        # -------------------- save --------------------------------------------------
+        print('save', versionname)
+        np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(allcov))
+        np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(allinp))
+        print('resulting shape:', allcov.shape, allinp.shape)
+        print(allnegew)
 
 ###################### CONSTRUCT RANDOM SUBSAMPLES ###################################
 alluniquesne = np.unique([extractsne(s) for s in allinp.index])
