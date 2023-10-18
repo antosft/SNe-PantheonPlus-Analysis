@@ -49,7 +49,15 @@ We chose `nlive = 1000` and `tolerance = 1e-3`, `'FOLDER' = 'NAME/MODEL'` (for a
 
 ### `distmod.py`
 
-Run as `python distmod.py 'NAME'` to calculate the splined interpolation tables of the distance moduli from the `PP_NAME_input.txt` file. Alternatively, import this file and run `rundistmod('path/to/PP_NAME_input.txt')` from any other script. The results are stored in `Pantheon/Build/PP_NAME_tabledL_lcdm.npy` for the standard model and `Pantheon/Build/PP_NAME_tabledL_ts.npy` for timescape.
+Run as 
+```
+python distmod.py 'NAME'
+``` 
+to calculate the splined interpolation tables of the distance moduli from the `PP_NAME_input.txt` file. Alternatively, import this file and run 
+```
+rundistmod('path/to/PP_NAME_input.txt')
+``` 
+from any other script. The results are stored in `Pantheon/Build/PP_NAME_tabledL_lcdm.npy` for the standard model and `Pantheon/Build/PP_NAME_tabledL_ts.npy` for timescape.
 
 ## Read output files for plotting
 
