@@ -9,7 +9,7 @@ nominalmu = 'MUOPT000'
 reducelowz = False # whether to reduce the excess of low-redshift SNe to an amount similar to the JLA/P+ subsample
 Nseeds = 0 # number of random subsamples to be drawn
 m = 580 # size of the random subsamples
-chooseoptions = []#'low', 'high'] # for 'high', the third with highest zCMB is fully taken and the other two are chosen randomly
+chooseoptions = ['low', 'high'] # for 'high', the third with highest zCMB is fully taken and the other two are chosen randomly
 # other possibilities: 'low' (the other way round) or 'none' (usual random subsample with same distribution as the full one)
 
 ###################### DEFINITIONS ###################################################
@@ -199,14 +199,14 @@ eigenvalues(allcov, 'finalcov', allinp.index, returnsne=False) # check if result
 
 ###################### SAVE NOMINAL SAMPLES & REDUCED LOW Z SUBSAMPLE ################
 if Nseeds == 0:
-    versionname = 't1690'
+    versionname = '1690'
     print('save', versionname)
     np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(allcov))
     np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(allinp))
     print('resulting shape:', allcov.shape, allinp.shape)
     print(allnegew)
     
-    versionname = 't1690jla'
+    versionname = '1690jla'
     jla = np.array(pd.read_csv('Pantheon/joinedsample_CID+IDSURVEY.csv', index_col=0).T)[0]
     subinp = allinp.loc[np.intersect1d(jla, allinp.index)]
     idxcov = blockidx(allinp.index)
