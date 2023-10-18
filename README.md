@@ -82,7 +82,7 @@ for model in modelidcs.keys():
     getresults = list(ParS('Pantheon_', modelidcs[model], tolerance, 'pipe/NAME', '', 13))
     omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)
     getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]
-    data[model] = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T
+    data[model] = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'alpha', 'beta', 'c', 'x1', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T
 ```  
 where `NAME` and `tolerance` remain to be specified. `Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
