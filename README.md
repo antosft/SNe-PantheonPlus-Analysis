@@ -57,7 +57,14 @@ Run as `python distmod.py 'NAME'` to calculate the splined interpolation tables 
 
 Import the functions `Timescape`, `LCDM` and `Milne` to load the output from `freq_loop.py`, e.g. via  
 ```
-data = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T
+import numpy as np
+import pandas as pd
+from parameter_freq import Timescape, LCDM, Milne
+functions = {'TS': Timescape, 'LCDM': LCDM, 'Milne': Milne}
+data = {}
+for model in functions.keys():
+    fctn = functions[model]
+    data[model] = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T
 ```  
 for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']`.
 
@@ -65,6 +72,10 @@ for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']
 
 Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` that was saved to `outputpipe/NAME/MODEL/Pantheon_modelidx_zcut_0_1_2_1000_tolerance_stats.dat` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
 ```
+import numpy as np
+import pandas as pd
+from parameter_MLE import Parameter_Strip as ParS
+allzcuts = np.linspace(0,0.1,21)
 getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))
 omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)
 getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]
