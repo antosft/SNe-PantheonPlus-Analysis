@@ -64,9 +64,9 @@ functions = {'TS': Timescape, 'LCDM': LCDM, 'Milne': Milne}
 data = {}
 for model in functions.keys():
     fctn = functions[model]
-    data[model] = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'a', 'b', 'x', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T
+    data[model] = pd.DataFrame(fctn(np.loadtxt('path/to/PP_NAME_' + model + '.txt')), index=['omega', 'alpha', 'beta', 'x1', 'c', 'M'], columns=np.linspace(0.0, 0.1, 41)).T
 ```  
-for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']`.
+for appropriate `NAME`.
 
 ### `parameter_MLE.py`
 
@@ -76,12 +76,15 @@ import numpy as np
 import pandas as pd
 from parameter_MLE import Parameter_Strip as ParS
 allzcuts = np.linspace(0,0.1,21)
-getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))
-omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)
-getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]
-data = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T
+modelidcs = {'TS': 1, 'LCDM': 2}
+data = {}
+for model in modelidcs.keys():
+    getresults = list(ParS('Pantheon_', modelidcs[model], tolerance, 'pipe/NAME', '', 13))
+    omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)
+    getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]
+    data[model] = pd.DataFrame(getresults, index=['Q', 'logZ', 'imp_logZ', 'a', 'b', 'c', 'x', 'omega_uncert'], columns=allzcuts[:len(getresults[0])]).T
 ```  
-`Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
+where `NAME` and `tolerance` remain to be specified. `Q` refers to `omega` for LCDM and `f_v0` for timescape (calculate `omega = 0.5*(1-fv0)*(2+fv0)` if necessary).
 
 ## Input files (within folder `Pantheon`)
 
