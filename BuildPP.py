@@ -7,8 +7,10 @@ mkposdef = True # force the covariance matrix to be positive definite by droppin
 nominal = 'FITOPT000' # file used to get the statistical covariance and the reference values
 nominalmu = 'MUOPT000'
 reducelowz = False # whether to reduce the excess of low-redshift SNe to an amount similar to the JLA/P+ subsample
-Nseeds = 50 # number of random subsamples to be drawn
+Nseeds = 0 # number of random subsamples to be drawn
 m = 580 # size of the random subsamples
+chooseoptions = ['low', 'high'] # for 'high', the third with highest zCMB is fully taken and the other two are chosen randomly
+# other possibilities: 'low' (the other way round) or 'none' (usual random subsample with same distribution as the full one)
 
 ###################### DEFINITIONS ###################################################
 def extractsne(name):
@@ -143,7 +145,7 @@ def boostz(z, RAdeg, DECdeg, vel=371.0, RA0=168.0118667, DEC0=-6.98303424):
     costheta = np.sin(DEC)*np.sin(DEC0) + np.cos(DEC)*np.cos(DEC0)*np.cos(RA-RA0) 
     return z + (vel/C)*costheta*(1+z)
 
-# -------------------- select columns as in BuildJLACases ----------------------------
+# -------------------- select columns as in BuildJLA ---------------------------------
 def PPinput(fulldf):
     myinput = fulldf.loc[:, ['zCMB', 'mB', 'x1', 'c', 'HOST_LOGMASS', 'IDSURVEY', 'zHEL', 'RA', 'DEC']]
     myinput.zCMB = boostz(fulldf.zHEL, fulldf.RA, fulldf.DEC)
@@ -195,9 +197,10 @@ colcov = idxcov
 allcov = allcov.loc[idxcov, colcov]
 eigenvalues(allcov, 'finalcov', allinp.index, returnsne=False) # check if resulting matrix has negative eigenvalues
 
+###################### SAVE NOMINAL SAMPLE & REDUCED LOW Z SUBSAMPLE #################
 versionname = '1690'
 if Nseeds == 0:
-    # -------------------- reduce low-redshift population --------------------------------
+    # -------------------- reduce low-redshift population ----------------------------
     if reducelowz:
         highz = allinp.loc[allinp.zCMB >= 5e-2].index
         lowz = allinp.loc[allinp.zCMB < 5e-2].index
@@ -209,13 +212,14 @@ if Nseeds == 0:
         colcov = idxcov
         allcov = allcov.loc[idxcov, colcov]
 
-    # -------------------- save ----------------------------------------------------------
+    # -------------------- save ------------------------------------------------------
     print('save', versionname)
     np.savetxt('Pantheon/Build/PP_' + versionname + '_COVd.txt', np.array(allcov))
     np.savetxt('Pantheon/Build/PP_' + versionname + '_input.txt', np.array(allinp))
     print('resulting shape:', allcov.shape, allinp.shape)
     print(allnegew)
 
+###################### CONSTRUCT RANDOM SUBSAMPLES ###################################
 alluniquesne = np.unique([extractsne(s) for s in allinp.index])
 l = len(alluniquesne)
 print(l)
@@ -232,9 +236,47 @@ for seed in range(Nseeds):
     print(allinp.shape, dfsamp.shape)
     dfcov = allcov.copy().loc[blockidx(dfsamp.index), blockidx(dfsamp.index)]
 
-    # -------------------- save ----------------------------------------------------------
+    # -------------------- save ------------------------------------------------------
     print('save', versionname, seed)
     np.savetxt('Pantheon/Build/PP_' + versionname + '_' + str(seed) + '_COVd.txt', np.array(dfcov))
     np.savetxt('Pantheon/Build/PP_' + versionname + '_' + str(seed) + '_input.txt', np.array(dfsamp))
     print('resulting shape:', dfcov.shape, dfsamp.shape)
     print(allnegew)
+
+###################### CONSTRUCT RANDOM SUBSAMPLES WITH WEIGHTED DISTRIBUTIONS #######
+allcmbsne = [[extractsne(s), allinp.loc[s, 'zCMB']] for s in allinp.index]
+alluniquesne = np.array(pd.DataFrame(allcmbsne).drop_duplicates(subset=[0]).sort_values(by=1).loc[:, 0])
+for choosewithoutreduce in chooseoptions:
+    print(choosewithoutreduce)
+    ll = 0 # the size of the sample of SNe that is taken in full
+    if choosewithoutreduce == 'high' or choosewithoutreduce == 'low':
+        ll = int(m / 2)
+    l = len(alluniquesne) - ll # the number of SNe that are chosen randomly
+    print(l)
+    idx = np.arange(l)
+    chooseall = np.array([]) # the indices of the sample of SNe that is taken in full
+    if choosewithoutreduce == 'low':
+        idx = idx + ll
+        chooseall = np.arange(ll)
+    elif choosewithoutreduce == 'high':
+        chooseall = l + np.arange(ll)
+    p = np.full(l, 1/l)
+    versionname = '1690random' + str(m) + choosewithoutreduce
+    for seed in range(Nseeds):
+        np.random.seed()
+        choice = np.unique(np.random.choice(idx, size = m, replace=False, p=p))
+        # print(len(choice), len(chooseall), list(choice), chooseall)
+        choice = np.append(choice, chooseall)
+        choicesne = np.concatenate([[sv for sv in allinp.index if extractsne(sv) == sn] for sn in np.array(alluniquesne)[choice]])
+        print(len(choice), choice, choicesne)
+        
+        dfsamp = allinp.loc[choicesne]
+        print(allinp.shape, dfsamp.shape)
+        dfcov = allcov.copy().loc[blockidx(dfsamp.index), blockidx(dfsamp.index)]
+    
+        # -------------------- save --------------------------------------------------
+        print('save', versionname, seed)
+        np.savetxt('Pantheon/Build/highlow/PP_' + versionname + '_' + str(seed) + '_COVd.txt', np.array(dfcov))
+        np.savetxt('Pantheon/Build/highlow/PP_' + versionname + '_' + str(seed) + '_input.txt', np.array(dfsamp))
+        print('resulting shape:', dfcov.shape, dfsamp.shape)
+        print(allnegew)
