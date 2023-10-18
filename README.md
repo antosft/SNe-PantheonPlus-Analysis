@@ -42,7 +42,7 @@ for `fctn` in `[Timescape, LCDM, Milne]` and `model` in `['TS', 'LCDM', 'Milne']
 ### `parameter_MLE.py`
 
 Import the function `Parameter_Strip as ParS` to load the output from `bayesian_pipe.py` that was saved to `outputpipe/NAME/MODEL/Pantheon_modelidx_zcut_0_1_2_1000_tolerance_stats.dat` for varying `zcut` (the list of `zcuts` given by `allzcuts` in the following example) and the other parameters as specified when calling `bayesian_pipe.py`, e.g. via  
-```getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))```  
+```getresults = list(ParS('Pantheon_', modelidx, tolerance, 'pipe/NAME', '', 13))  test```  
 test
 ```omega_uncert = np.array([[x for x in lc.split(' ') if x][2] for lc in np.array(getresults[-1], dtype=str)], dtype=float)
 getresults = [np.array(r, dtype=float) for r in getresults[:-1]] + [omega_uncert]
