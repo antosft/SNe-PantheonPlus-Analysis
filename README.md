@@ -115,3 +115,8 @@ Calibration files from folder `calibration_files` of the Pantheon+ survey for di
 ### `Build` folder
 
 All input (`_input.txt`) and covariance (`_COVd.txt`) files go here or in subfolders of this folder. They are build by `BuildPP.py` and read by `distmod.py`, `freq_loop.py`, `bayesian_pipe.py`, etc. The outputs of `distmod.py` and `freq_loop.py` are also saved and read from here.
+
+## Plotting example
+
+The code for Fig. 4 from the paper is included as `fig4_sample_comparison_plot`. After constructing the files correctly, this outputs the following plot.
+
