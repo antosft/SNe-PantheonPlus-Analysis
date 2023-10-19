@@ -210,6 +210,6 @@ for i, v in enumerate(vs):
     plt.grid()
 
 plt.subplots_adjust(wspace=0.5, hspace = 0.05 if len(vs) > 1 else None)
-# plt.savefig(bbox_inches='tight', fname='3randomsamples_tslcdm_' + str(len(vs)) + 'vars.pdf', format = 'pdf')
+# plt.savefig(bbox_inches='tight', fname='fig4_sample_comparison_plot_' + str(len(vs)) + 'vars.pdf', format = 'pdf')
 
 plt.show()
