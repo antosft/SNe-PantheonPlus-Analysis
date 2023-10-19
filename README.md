@@ -119,4 +119,4 @@ All input (`_input.txt`) and covariance (`_COVd.txt`) files go here or in subfol
 ## Plotting example
 
 The code for Fig. 4 from the paper is included as `fig4_sample_comparison_plot`. After constructing the files correctly, this outputs the following plot.
-![Fig 4. Sample comparison plot](/SNe-PantheonPlus-Analysis/fig4_sample_comparison_plot_4vars.pdf "Fig 4. Sample comparison plot")
+![Fig 4. Sample comparison plot](https://github.com/antosft/SNe-PantheonPlus-Analysis/blob/main/fig4_sample_comparison_plot_4vars.pdf "Fig 4. Sample comparison plot")
