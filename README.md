@@ -26,7 +26,7 @@ python BuildJLA.py
 ```
 Reads the previously downloaded JLA data from the `JLA_data` folder. Random subsamples are constructted by the `random_JLA(...)` function at the end. The output, including the files for the common subsample JLA580, is saved to `Pantheon/Build/PP_JLA_Common/NAME_input.txt` and `Pantheon/Build/PP_JLA_Common/NAME_COVd.txt`.
 
-### Frequentist: `freq_loop.py` and `freq_loop_marg.py`
+### Frequentist: `freq_loop.py`, `freq_loop_marg.py` and `freq_profile`
 
 Run as 
 ```
@@ -37,7 +37,8 @@ after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdist
 runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])
 ```
 if working from a different script.  
-An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`.
+An adapted version of this code that includes the marginalising procedure is available as `freq_loop_marg.py`.  
+These `freq_loop` codes run the frequentist analysis over a range of redshift cuts. Alternatively, we can fix a redshift cut and calculate the likelihood for a range of model parameters. This is done by `freq_profile.py`.
 
 ### Bayesian: `bayesian_pipe.py` and `spline_pipe.py`
 
