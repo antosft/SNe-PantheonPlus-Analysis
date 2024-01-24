@@ -283,7 +283,7 @@ def runfreq(prefixinp, prefixsav, zC=np.linspace(0,0.1,41)):
     np.savetxt(prefixsav+'logl_lcdm.txt', logl_lcdm, delimiter = '\t')
     np.savetxt(prefixsav+'logl_ts.txt', logl_ts, delimiter = '\t')
     
-if __name__ == '__main__'
+if __name__ == '__main__':
     start = time.time()
     startdist = start
 
