@@ -33,7 +33,8 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-versionname
+versionname = '1690'
+zcuts = np.linspace(0,0.25,201)
 start = time.time()
 
 # ===============================================================================================
@@ -57,7 +58,7 @@ milne = []
 aic = []
 logl_ts = []
 logl_lcdm = []
-zC = np.linspace(0,0.25,201)
+zC = zcuts
 
 print('================= FREQUENTIST ANALYSIS FOR P+' + name + ' Extended =================')
 
