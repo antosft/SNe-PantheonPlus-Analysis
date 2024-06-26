@@ -33,15 +33,14 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-
+versionname
 start = time.time()
 
 # ===============================================================================================
 
     
 string = 'Pantheon/Build/'
-name = '1690'
-# string1 = 'S:/Research/Cosmological_Foundations_2023/Paper_Analysis/'
+name = versionname
 
 # start_abs = time.time()
 
