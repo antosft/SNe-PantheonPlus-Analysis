@@ -16,7 +16,7 @@ Run as
 ```
 python BuildPP.py
 ```
-Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. A priori, the files for P+1690 (called `PP_1690`) and P+580 (called `PP_1690jla`) are saved as outputs. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand. 
+Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. A priori, the files for P+1690 (called `PP_1690`) and P+580 (called `PP_1690jla`) are saved as outputs. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand.  
 
 `BuildPPcsv.py` can be run analogously, the only difference being the additional output of a file `Pantheon/Build/PP_NAME_input.csv` to be passed to `bayesian_nongauss.csv`
 
@@ -28,13 +28,15 @@ python BuildJLA.py
 ```
 Reads the previously downloaded JLA data from the `JLA_data` folder. Random subsamples are constructted by the `random_JLA(...)` function at the end. The output, including the files for the common subsample JLA580, is saved to `Pantheon/Build/PP_JLA_Common/NAME_input.txt` and `Pantheon/Build/PP_JLA_Common/NAME_COVd.txt`.
 
-### Frequentist: `freq_loop.py`, `freq_loop_marg.py` and `freq_profile`
+### Frequentist: `freq_loop.py`, `freq_loop_marg.py`, `freq_loop_nongauss.py` and `freq_profile`
 
 Run as 
 ```
 python freq_loop.py
 ```
-after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar). Call 
+after specifying `Nseeds`, `versionname`, `Nsamples`, `zcuts` and `constructdistmod` in the first lines. `Nseeds == 0` causes the script to run on a single file found at `Pantheon/Build/PP_NAME_input.txt` for `versionname = 'NAME'` instead of the Nseeds random subsamples (which would need `versionname = '1690random'` or similar).  
+`freq_loop_nongauss.py` can be run similarly but only needs specifying `versionname` and `zcuts`, `Nseeds` is choosen to be `0` and `Nsamples` is thus not needed. `distmod.py` has to be run beforehand.  
+Call 
 ```
 runfreq('path/to/input/PP_NAME_', 'path/to/output/PP_NAME_', [zcuts])
 ```
