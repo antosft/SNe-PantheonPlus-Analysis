@@ -18,7 +18,9 @@ python BuildPP.py
 ```
 Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too large to upload) as well as `fitopts_summary.csv` and `muopts_summary.csv` to get the scales for the weighting of the `FITRES` files. The covariance matrix is calculated as specified in `how_to_covariance.ipynb`. A priori, the files for P+1690 (called `PP_1690`) and P+580 (called `PP_1690jla`) are saved as outputs. By adapting `Nseeds` and `m` (number $N$ of unique supernovae included in each subsample), multiple files with the `_input.txt` and `_COVd.txt` data can be generated, including weighted ones according to the `chooseoptions` variable. If `reducelowz` is set `True`, the `joinedsample_CID+IDSURVEY.csv` file is read to adapt the fraction of low-redshift supernovae according to the JLA sample. The output is saved to `Pantheon/Build/PP_NAME_input.txt` and `Pantheon/Build/PP_NAME_COVd.txt` (`NAME` stands for the versionname variable specified in the script, e.g. `1690` for the full P+1690 or `1690random1000_0` for the first random subsample with `m = 1000`). For the random subsamples with weighted distributions, a folder `Pantheon/Build/highlow` has to be set up beforehand.  
 
-`BuildPPcsv.py` can be run analogously, the only difference being the additional output of a file `Pantheon/Build/PP_NAME_input.csv` to be passed to `bayesian_nongauss.csv`
+`BuildPPcsv.py` can be run analogously, the only difference being the additional output of a file `Pantheon/Build/PP_NAME_input.csv` to be passed to `bayesian_nongauss.csv`.  
+
+The resulting `_input.csv`  and `COVd.txt` files obtained for the P+1690 sample can be found at https://doi.org/10.5281/zenodo.12729746.
 
 ### `BuildJLA.py` and the `JLA_data` folder
 
