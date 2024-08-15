@@ -20,7 +20,7 @@ Reads all `.FITRES` files from the `Pantheon/calibration_files` folder (too larg
 
 `BuildPPcsv.py` can be run analogously, the only difference being the additional output of a file `Pantheon/Build/PP_NAME_input.csv` to be passed to `bayesian_nongauss.csv`.  
 
-The resulting `_input.csv`  and `COVd.txt` files obtained for the P+1690 sample can be found at https://doi.org/10.5281/zenodo.12729746.
+The resulting `_input.csv`  and `_COVd.txt` files obtained for the P+1690 sample can be found at https://doi.org/10.5281/zenodo.12729746.
 
 ### `BuildJLA.py` and the `JLA_data` folder
 
